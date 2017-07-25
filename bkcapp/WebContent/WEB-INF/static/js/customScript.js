@@ -122,7 +122,7 @@ $('#rRegister').click(function(){
 //Login
 $('#rLogin').click(function(){
     console.log("Login");
-    var lEmail = $("#lEmail").val();
+    var lName = $("#lName").val();
     var lPass = $('#lPass').val();
     var count = 0;
     var userIdNo;
@@ -135,6 +135,8 @@ $('#rLogin').click(function(){
             userIdNo = cli.userIdNo;
         }
     }
+    
+    
     console.log(count);
     if(count > 0){
         alert("Login Successful");
@@ -142,7 +144,7 @@ $('#rLogin').click(function(){
         setCookie("vars",userIdNo,"1");
         
         $.ajax({
-            url: 'http://localhost:8082/bkcapp/property/Login/Kshitiz/kshitizone/',  //change this with Post property URL and change GET method to POST with data
+            url: 'http://localhost:8082/bkcapp/property/Login/saurav/SauravOne/',  //change this with Post property URL and change GET method to POST with data
             type: 'GET',
             //type: 'POST',
             //data: postJson,
@@ -232,11 +234,12 @@ $('#propertySave').click(function(){
         proprent = $('#proprent').val(),
         propdeposit = $('#propdeposit').val(),
         propdetails = $('#propdetails').val(),
+        console.log(propdeposit)
         postJson = {    "username":propowner,
                         "address":propCompleteAddress,
                         "aboutProperty":propdetails,
                         "rent":proprent,
-                        "securityDeposit":propdeposit,
+                        "userEmail":propdeposit,
                         "houseSize":propsize,
                         /*"rentedState":"0",*/
                         "propertyRegNo":propflatno
@@ -248,7 +251,7 @@ $('#propertySave').click(function(){
                 'Content-Type': 'application/json' 
             },
         	url: 'http://localhost:8082/bkcapp/property/postProperty',  //change this with Post property URL and change GET method to POST with data
-            type: 'GET',
+           // type: 'GET',
             type: 'POST',
             data: JSON.stringify(postJson),
             dataType: 'json',
@@ -318,7 +321,7 @@ if($('#productDetail').length > 0){
                 $('#propaddress').val(data.address);
                 $('#proprent').val(data.rent);
                  $('#bproprent').val(data.rent);
-                $('#propdeposit').val(data.securityDeposit);
+                $('#propdeposit').val(data.userEmail);
                 $('#propdetails').val(data.aboutProperty);
                 $('#propPostedDate').val(data.postedTimeStampFormatted);
 
@@ -328,9 +331,19 @@ if($('#productDetail').length > 0){
                 $('.propowner').html(data.username);
                 $('.propaddress').html(data.address);
                 $('.proprent').html(data.rent);
-                $('.propdeposit').html(data.securityDeposit);
+                $('.propdeposit').html(data.userEmail);
                 $('.propdetails').html(data.aboutProperty);
                 $('.propPostedDate').html(data.postedTimeStampFormatted);
+                console.log("user  "+data.isCurrentUserOwner);
+                if(data.isCurrentUserOwner===true){
+                	console.log("If");
+                	$("#requestModalbtn").hide();
+                	$("#createAgreementModalbtn").show();
+                }else{
+                	console.log("else");
+                	$("#createAgreementModalbtn").hide();
+                	$("#requestModalbtn").show();
+                }
             }          
         },
         error: function(data){
@@ -347,15 +360,20 @@ $('#confirmBooking').click(function(){
         tenentName = "Kumar",
         postJson = {    "rent":bproprent,
                         "propertyRegNo":bpropflatno,
-                        "tenentAddr" : tenentAddr,
-                        "tenentName" : tenentName
+                        "tenant" : tenentAddr
+                        
                     }
         console.log(postJson);
-        $.ajax({
-            url: '../js/list.json',  //change this with Book property URL and change GET method to POST with data
-            type: 'GET',
-            //type: 'POST',
-            //data: postJson,
+        
+    $.ajax({
+            url: 'http://localhost:8082/bkcapp/property/createAgreement',  //change this with Book property URL and change GET method to POST with data
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' 
+            },
+            //type: 'GET',
+            type: 'POST',
+            data: JSON.stringify(postJson),
             dataType: 'json',
             success: function(data){
               alert("data saved");
@@ -369,5 +387,69 @@ $('#confirmBooking').click(function(){
         });
 
 })
+
+$('#requestForRentModal').click(function(){
+	
+	
+	var userLoginNo = getCookie("vars");
+    console.log(userLoginNo);
+    
+    var usernamePJ, userEmailPJ,mobileNoPJ;
+        
+    for(var i in tbClients){
+        var cli = JSON.parse(tbClients[i]);
+        if (cli.userIdNo == userLoginNo) {
+            sequenceNo = i;
+            console.log(sequenceNo);
+            usernamePJ = cli.Name;
+            userEmailPJ = cli.Email;
+            mobileNoPJ = cli.Mobile;
+           
+            
+           
+        }
+    }
+	
+    var bpropflatno = $('#bpropflatno').val(),
+        bproprent = $('#bproprent').val(),
+        userEmail = $('#propdeposit').val();
+        postJson = {
+    			userName : usernamePJ,
+    			userEmail : userEmailPJ,
+    			userMobileNo : mobileNoPJ,
+    			propertyRegNo : bpropflatno,
+    			ownerEmail : userEmail
+    			
+    	}
+    	
+	
+		
+	
+        console.log(postJson);
+        $.ajax({
+            url: 'http://localhost:8082/bkcapp/property/requestForRent',  
+            headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' 
+            },//change this with Book property URL and change GET method to POST with data
+            //type: 'GET',
+            type: 'POST',
+            data: JSON.stringify(postJson),
+            dataType: 'json',
+            success: function(data){
+              alert("data saved");
+              //$('.alert-success').css('display','block');      
+            },
+            error: function(data){
+                alert("data Not saved");
+                //$('.alert-danger').css('display','block');  
+            }
+            
+        });
+
+})
+
+
+
 
 });

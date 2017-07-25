@@ -18,9 +18,9 @@ public class PropertyModel {
 	private long postedTimeStamp;
 	private String aboutProperty;
 	private int rent;
-	private int securityDeposit;
+	private String userEmail;
 	private String houseSize;
-
+	boolean IsCurrentUserOwner;
 	/*public User getUser() {
 		return user;
 	}
@@ -105,12 +105,12 @@ public class PropertyModel {
 		this.rent = rent;
 	}
 
-	public int getSecurityDeposit() {
-		return securityDeposit;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	public void setSecurityDeposit(int securityDeposit) {
-		this.securityDeposit = securityDeposit;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public String getHouseSize() {
@@ -121,13 +121,21 @@ public class PropertyModel {
 		this.houseSize = houseSize;
 	}
 
+	public boolean isIsCurrentUserOwner() {
+		return IsCurrentUserOwner;
+	}
+
+	public void setIsCurrentUserOwner(boolean isCurrentUserOwner) {
+		IsCurrentUserOwner = isCurrentUserOwner;
+	}
+
 	@Override
 	public String toString() {
-		return "PropertyModel [username=" + username + ", address=" + address + ", PropertyRegNo=" + PropertyRegNo
-				+ ", postedTimeStamp=" + postedTimeStamp + ", aboutProperty=" + aboutProperty + ", rent=" + rent
-				+ ", securityDeposit=" + securityDeposit + ", houseSize=" + houseSize + "]";
+		return "PropertyModel [username=" + username + ", userAddress=" + userAddress + ", address=" + address
+				+ ", PropertyRegNo=" + PropertyRegNo + ", postedTimeStamp=" + postedTimeStamp + ", aboutProperty="
+				+ aboutProperty + ", rent=" + rent + ", userEmail=" + userEmail + ", houseSize=" + houseSize + "]";
 	}
-	
+
 	
 	
 }
