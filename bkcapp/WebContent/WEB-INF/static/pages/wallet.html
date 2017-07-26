@@ -52,7 +52,7 @@
 
 </head>
 
-<body>
+<body id="walletId">
 
     <div id="wrapper">
 
@@ -205,7 +205,7 @@
                         <h4 class="accountdetailsTitle">Wallet Details</h4>
                       </div>
                       <div id ="walletdetails "class="panel-body">
-                           <!-- <div class="col-md-8">              
+                           <div class="col-md-8" id="displayWallet">              
 				            <div class="row">
 				                <div class="col-md-4"> 
 				                    <p class="group inner list-group-item-text">Wallet Address : </p>
@@ -223,8 +223,17 @@
 				                    <input class="form-control" id="walletbalace" type="hidden">
 				                    <p class="group inner list-group-item-text walletbalace"></p>
 				                </div>
-				            </div> -->
+				            </div>
                       </div>
+                      <div class="col-md-8" id="displayError">              
+				            <div class="row">				                
+				                <div class="col-md-8">
+				                    <div class="alert alert-danger" role="alert">Oh snap! Something went wrong, Please reload the page.</div>
+				                </div>
+				            </div>
+				            
+                      </div>
+                      
                      <!--  <div class="panel-footer">Panel footer</div> -->
                     </div>
                 </div>

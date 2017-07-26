@@ -64,7 +64,9 @@
 }
 
 
-
+/* #displayError{
+	display:none;
+} */
 
  .topMargin{
   margin-top: 15px;
