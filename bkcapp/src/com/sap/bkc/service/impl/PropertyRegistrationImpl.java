@@ -82,7 +82,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 	@Override
 	public GeneralInfo getDashboardRelatedInfo() {
 		// TODO Auto-generated method stub
-		return null;
+		return getDashboardRelatedInfoUsingWrappers();
 	}
 
 	private TransactionReceipt insertRecordUsingWrappers(PropertyModel propModel) {
@@ -122,7 +122,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 		try {
 			String[] allProps = propertyRegsitry.getHouses(Utilities.getUint8(state.getState())).get().toString()
 					.split(";");
-
+			
 			for (String str : allProps) {
 				if (!str.equals("")) {
 					String[] strArr = str.split(",");
@@ -189,7 +189,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 			List<Type> details = prop.getPropertydetails().get();
 			
 			Address userAddress = (Address)details.get(1);
-			
+			System.out.println(details.get(0).toString());
 			String[] detailArr = (details.get(0).toString()).split(",");
 			model.setRent(Integer.parseInt(detailArr[0]));
 			model.setUserEmail(detailArr[1]);
@@ -265,7 +265,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 	
 	private WalletModel getWalletInfoWrappers() {
 		WalletModel walletObject = new WalletModel();
-		
+		walletObject.setWalletAddress(CredentialsHelper.getCurrentUserAddress());
 		
 		try {
 			EthGetBalance ethGetBalance;
@@ -278,8 +278,9 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 			
 			String balance = wei.divide(new BigInteger("1000000000000000000")).toString();
 			
-			walletObject.setWalletAddress(CredentialsHelper.getCurrentUserAddress());
+			
 			walletObject.setWalletBalance(balance);
+			System.out.println(walletObject);
 		} catch (InterruptedException | ExecutionException e) {
 			
 			e.printStackTrace();

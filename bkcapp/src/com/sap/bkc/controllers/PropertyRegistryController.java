@@ -1,6 +1,8 @@
 package com.sap.bkc.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.bkc.models.MailDetails;
 import com.sap.bkc.models.PropertyModel;
 import com.sap.bkc.models.RentalAgreementModel;
@@ -60,10 +63,14 @@ public class PropertyRegistryController {
 		return propertyRegistry.createAgreement(model);
 	}
 	@PostMapping("requestForRent")
-	public String requestForRentingProperty(@RequestBody MailDetails model) {
+	public Map<String,String> requestForRentingProperty(@RequestBody MailDetails model) {
 		model.setUserWalletAddress(CredentialsHelper.getCurrentUserAddress());
 		propertyRegistry.requestForRent(model);
-		return "200 OK";
+		
+			
+		Map<String,String> mapper = new HashMap<>();
+		mapper.put("response","zordaar");
+		return mapper;
 	}
 	/*@RequestMapping("/static/index.htm") 
 	public String getIndexPage() { 

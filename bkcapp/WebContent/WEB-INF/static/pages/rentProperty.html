@@ -66,6 +66,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="index.html">Ethereumists</a>
+                <a class="navbar-brand" href="#" id="userNameBind" style="margin-left:1380px"></a>
             </div>
             <!-- /.navbar-header -->
 
@@ -199,15 +200,17 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="topMargin">
-	                <div class="col-md-8" id="displayError">              
+                <div class="topMargin">	
+                
+				    <div class="col-md-8" id="displayError">              
 				      <div class="row">				                
 				          <div class="col-md-8" id="msgBox">
-				              
+				              <div class="alert alert-danger" role="alert">Oops!! There are no properties to be displayed. Please visit again.</div>
 				          </div>
 				      </div>						            
-				    </div>
-                   <div class="well well-sm">
+				    </div>  
+				                
+                   <div class="well well-sm" id="gridLayout">
         <strong>Display</strong>
         <div class="btn-group">
             <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
@@ -215,7 +218,7 @@
                 class="glyphicon glyphicon-th"></span>Grid</a>
         </div>
     </div>
-    <br/>    
+    <br/> 
     <div id="products" class="row list-group">
        <!--  <div class="item  col-xs-4 col-lg-4">
             <div class="thumbnail">

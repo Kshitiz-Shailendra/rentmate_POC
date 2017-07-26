@@ -63,10 +63,16 @@
     margin: 0 0 11px;
 }
 
-
-/* #displayError{
+#gridLayout{
 	display:none;
-} */
+}
+.listButtonAlign{
+	margin-top: 9px;
+	margin-left: 128px;
+}
+#displayError{
+	display:none;
+}
 
  .topMargin{
   margin-top: 15px;

@@ -101,7 +101,7 @@ $(function() {
 	}
 	console.log(tbClients);
 	var flagDom = false;
-
+	var pleaseWaitDiv = $('<div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false"><div class="modal-header"><h1>Processing...</h1></div><div class="modal-body"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div></div>');
 	/*
 	 * function Add(){ var client = JSON.stringify({ Name : $("#rName").val(),
 	 * Age : $("#rAge").val(), Email : $("#remail").val(), Mobile :
@@ -147,7 +147,7 @@ $(function() {
 
 				console.log(count);
 				if (count > 0) {
-					alert("Login Successful");
+					//alert("Login Successful");
 					window.location.href = "index.html?vers=" + userIdNo;
 					setCookie("vars", userIdNo, "1");
 
@@ -159,19 +159,46 @@ $(function() {
 																// and change
 																// GET method to
 																// POST with
-																// data
+														// data
 						type : 'GET',
 						// type: 'POST',
 						// data: postJson,
-						dataType : 'json',
+						//dataType : 'json',
 						success : function(data) {
-							alert("data saved");
+							//alert("data saved");
+							console.log("success ->"+data);
+							//if(data){						
+							
+								$.ajax({
+									url : 'http://localhost:8082/bkcapp/property/Login/getDashBoardInfo',
+									type : 'GET',
+									async : false,
+									// type: 'POST',
+									// data: postJson,
+									dataType : 'json',
+									success : function(data) {
+										//alert("data saved");
+										console.log(data);
+									},
+									error : function(data) {
+										
+										
+										//alert("data Not saved");
+									}
+	
+								});
+							//}
 						},
 						error : function(data) {
 							alert("data Not saved");
+						},
+						complete:function(){
+							console.log("test");
 						}
 
 					});
+					
+					
 				} else {
 					alert("Login Not Successful");
 				}
@@ -242,6 +269,7 @@ $(function() {
 	$('#propertySave')
 			.click(
 					function() {
+						$('#myPleaseWait').modal('show');
 						var propflatno = $('#propflatno').val(), propsize = $(
 								'#propsize').val(), propowner = $('#propowner')
 								.val(), propaddress = $('#propaddress').val(), propcity = $(
@@ -287,11 +315,20 @@ $(function() {
 									data : JSON.stringify(postJson),
 									dataType : 'json',
 									success : function(data) {
-										console.log(data)
-										alert("data saved");
+										console.log(data);
+						            	//alert("data saved");
+						            	//pleaseWaitDiv.modal('hide');
+						            	$('#myPleaseWait').modal('hide');
+						            	$('#msgBox').html("<div class='alert alert-success' role='alert'>Well done! You successfully Posted your property with below details.</br><b>Transaction Hash:</b> "+data.transactionHash+"</br><b>Block Number:</b> "+data.blockNumber+"</div>");
+						            	$('#displayError').css('display','block');
 									},
 									error : function(data) {
-										alert("data Not saved");
+										//alert("data Not saved");
+						            	console.log("Error "+data);
+						            	//pleaseWaitDiv.modal('hide');
+						            	$('#myPleaseWait').modal('hide');
+						                $('#msgBox').html("<div class='alert alert-danger' role='alert'>Oh snap! Something went wrong, Please Try after Some time</div>");
+						            	$('#displayError').css('display','block');
 									}
 
 								});
@@ -299,8 +336,10 @@ $(function() {
 					})
 
 	// list JSON data in List property page
+		
 	var loadListData = function() {
 		if ($('#products').length > 0) {
+			$('#displayError').css('display','none');
 			// alert("1");
 			$
 					.ajax({
@@ -316,18 +355,19 @@ $(function() {
 							console.log(data);
 							console.log(data.length);
 							if (data && data.length > 0) {
+								$('#gridLayout').css('display','block'); 
 								for (var i = 0; i <= data.length; i++) {
 									// if(data[i].rentedState !== "2"){
 									console.log(data[i])
 									$('#products')
 											.append(
-													" <div class='item  col-xs-4 col-lg-4'><div class='thumbnail'><img class='group list-group-image' src='http://placehold.it/400x250/000/fff' alt=' /><div class='caption'><h4 class='group inner list-group-item-heading'>"
+													" <div class='item  col-xs-4 col-lg-4'><div class='thumbnail'><img class='group list-group-image' src='../img/1.jpeg' width='490px' height='200px' alt='Property Image' /><div class='caption'><h4 class='group inner list-group-item-heading'>"
 															+ data[i].houseSize
 															+ " Sq.Ft</h4><p class='group inner list-group-item-text'>"
 															+ data[i].aboutProperty
 															+ "</p><div class='row'><div class='col-xs-12 col-md-6'><p class='lead'>Rs."
 															+ data[i].rent
-															+ "</p></div><div class='col-xs-12 col-md-6'><a class='btn btn-success testClass' href='detailPage.html?id="
+															+ "</p></div><div class='col-xs-12 col-md-6'><a class='btn btn-success testClass listButtonAlign' href='detailPage.html?id="
 															+ data[i].propertyRegNo
 															+ "' id='"
 															+ data[i].propertyRegNo
@@ -336,9 +376,17 @@ $(function() {
 									// }
 								}
 							}
+							else{
+								$('#gridLayout').css('display','none');  
+								//$('#msgBox').html("<div class='alert alert-dialog' role='alert'></div>");
+				              	  $('#displayError').css('display','block');
+				              	  
+				              }
 						},
 						error : function(data) {
-							console.log("error");
+							$('#gridLayout').css('display','none');
+							//$('#msgBox').html("<div class='alert alert-dialog' role='alert'>Oh snap! Server Down. Please try after some time</div>");
+			            	$('#displayError').css('display','block');
 						}
 
 					});
@@ -370,7 +418,11 @@ $(function() {
 					$('#propdeposit').val(data.userEmail);
 					$('#propdetails').val(data.aboutProperty);
 					$('#propPostedDate').val(data.postedTimeStampFormatted);
-
+					
+					
+					
+					$('#rqpropflatno').val(data.propertyRegNo);
+					$('#rqroprent').val(data.rent);
 					// Fill The Display
 					$('.propflatno').html(data.propertyRegNo);
 					$('.propsize').html(data.houseSize);
@@ -402,6 +454,8 @@ $(function() {
 	$('#confirmBooking')
 			.click(
 					function() {
+						$('#createAgreementModal').modal('hide');
+						$('#myPleaseWait').modal('show');
 						var bpropflatno = $('#bpropflatno').val(), 
 								bproprent = $('#bproprent').val(), 
 								tenentAddr = $('#tenentAddr').val(), 
@@ -426,12 +480,21 @@ $(function() {
 									data : JSON.stringify(postJson),
 									dataType : 'json',
 									success : function(data) {
-										alert("data saved");
+										//alert("data saved");
 										// $('.alert-success').css('display','block');
+										$('#myPleaseWait').modal('hide');
+										//$('#createAgreementModal').modal('hide');
+						            	$('#rqmsgBox').html("<div class='alert alert-success' role='alert'>Well done! You successfully Posted your property with below details.</br><b>Transaction Hash:</b> "+data.transactionHash+"</br><b>Block Number:</b> "+data.blockNumber+"</div>");
+						            	$('#rqdisplayError').css('display','block');
 									},
 									error : function(data) {
-										alert("data Not saved");
+										
+										//alert("data Not saved");
 										// $('.alert-danger').css('display','block');
+										$('#myPleaseWait').modal('hide');
+										//$('#createAgreementModal').modal('hide');
+						                $('#rqmsgBox').html("<div class='alert alert-danger' role='alert'>Oh snap! Something went wrong, Please Try after Some time</div>");
+						            	$('#rqdisplayError').css('display','block');
 									}
 
 								});
@@ -441,7 +504,8 @@ $(function() {
 	$('#requestForRentModal')
 			.click(
 					function() {
-
+						$('#requestModal').modal('hide');
+						$('#myPleaseWait').modal('show');
 						var userLoginNo = getCookie("vars");
 						console.log(userLoginNo);
 
@@ -486,16 +550,75 @@ $(function() {
 									data : JSON.stringify(postJson),
 									dataType : 'json',
 									success : function(data) {
-										alert("data saved");
-										// $('.alert-success').css('display','block');
+										//alert("data saved");
+										$('#myPleaseWait').modal('hide');
+										//$('#requestModal').modal('hide');
+						            	$('#rqmsgBox').html("<div class='alert alert-success' role='alert'>Well done! You successfully Posted your property with below details.</div>");
+						            	$('#rqdisplayError').css('display','block');
 									},
 									error : function(data) {
-										alert("data Not saved");
+										//alert("data Not saved");
 										// $('.alert-danger').css('display','block');
+										$('#myPleaseWait').modal('hide');
+										//$('#requestModal').modal('hide');
+						            	$('#rqmsgBox').html("<div class='alert alert-danger' role='alert'>Oh snap! Something went wrong, Please Try after Some time</div>");
+						            	$('#rqdisplayError').css('display','block');
 									}
 
 								});
 
 					})
+					
+					if($('#walletId').length >0){
+						$.ajax({
+					    	headers: { 
+					            'Accept': 'application/json',
+					            'Content-Type': 'application/json' 
+					        },
+					    	url: 'http://localhost:8082/bkcapp/property/getWalletDetails',  //change this with Post property URL and change GET method to POST with data
+					        type: 'GET',
+					        //type: 'POST',
+					        //data: JSON.stringify(postJson),
+					        dataType: 'json',
+					        success: function(data){
+					        	console.log(data)
+					        	if(data.hasOwnProperty("walletAddress") && data.hasOwnProperty("walletBalance")){
+					        		$('#walletaddress').val(data.walletAddress);
+					        		$('#walletbalace').val(data.walletBalance);
+					        		$('.walletaddress').html(data.walletAddress);
+					        		$('.walletbalace').html(data.walletBalance);
+					        		$('#walletdetails').css('display','block');
+					        		$('#displayError').css('display','none');
+					        	}
+					        	else{
+					        		$('#displayError').css('display','block');
+					        		$('#walletdetails').css('display','none');
+					        	}
+					        	//alert("data saved");      
+					        },
+					        error: function(data){
+					        	$('#displayError').css('display','block');
+					    		$('#walletdetails').css('display','none');
+					        }
+					        
+					    });
+
+					}
+	
+	
+	if ($('#side-menu').length > 0) {		
+		var userLoginNo = getCookie("vars");
+		console.log(userLoginNo);
+		var sequenceNo;
+		for ( var i in tbClients) {
+			var cli = JSON.parse(tbClients[i]);
+			if (cli.userIdNo == userLoginNo) {
+				sequenceNo = i;
+				console.log(sequenceNo);
+				$("#userNameBind").html("Welcome "+cli.Name);				
+			}
+		}
+	}
+
 
 });

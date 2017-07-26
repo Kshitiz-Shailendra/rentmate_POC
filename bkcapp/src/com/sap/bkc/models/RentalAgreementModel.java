@@ -59,11 +59,11 @@ public class RentalAgreementModel {
 		@Override
 		public String toString() {
 			return "RentalAgreementModel "
-					+ "/nProperty Registration No : " + propertyRegNo + ""
-					+ "/nRent : " + rent + ""
-					+"/nCreatedTimestamp : "+ createdTimestamp + ""
-					+ "/nTenant wallet address : " + tenant + ""
-					+ "/nlandlord wallet address : " + landlord + "/n";
+					+ "\nProperty Registration No : " + propertyRegNo + ""
+					+ "\nRent : " + rent + ""
+					+ "\nCreatedTimestamp : "+ createdTimestamp + ""
+					+ "\nTenant wallet address : " + tenant + ""
+					+ "\nlandlord wallet address : " + landlord + "\n";
 		}
 		
 		public String toString(TransactionReceipt receipt) {

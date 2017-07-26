@@ -53,7 +53,27 @@
 </head>
 
 <body id="detailPropertyPage">
-
+	<div class="modal fade bs-example-modal-sm" id="myPleaseWait" tabindex="-1"
+    role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span class="glyphicon glyphicon-time">
+                    </span>Please Wait
+                 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info
+                    progress-bar-striped active"
+                    style="width: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Modal for owner to create agreement -->
     <div class="modal fade" id="createAgreementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
@@ -117,13 +137,13 @@
                                     <div class="control-group">
                                         <label class="control-label" for="bpropflatno">Property Registration No</label>
                                         <div class="controls">
-                                            <input class="form-control" id="bpropflatno" disabled="true" type="text">
+                                            <input class="form-control" id="rqpropflatno" disabled="true" type="text">
                                         </div> <!-- /controls -->               
                                     </div> <!-- /control-group -->
                                      <div class="control-group">
                                         <label class="control-label" for="bproprent">Rent</label>
                                         <div class="controls">
-                                            <input class="form-control" id="bproprent" disabled="true" type="text">
+                                            <input class="form-control" id="rqroprent" disabled="true" type="text">
                                         </div> <!-- /controls -->               
                                     </div> <!-- /control-group -->
                                     
@@ -161,6 +181,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="index.html">Ethereumists</a>
+                <a class="navbar-brand" href="#" id="userNameBind" style="margin-left:1380px"></a>
             </div>
             <!-- /.navbar-header -->
 
@@ -300,7 +321,7 @@
                     </div>
         <div id="productDetail" class="row">
         <div class="col-md-4">
-            <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+            <img class="group list-group-image" src="../img/1.jpeg" width="470px" height="250px" alt="" />
         </div>
           <div class="col-md-8">              
             <div class="row">
@@ -382,14 +403,21 @@
                 <div class="col-md-8">
                     <a class="btn btn-warning" href="rentProperty.html" id="cancelForm">Go Back</a>
                     <a class="btn btn-success" id="createAgreementModalbtn" href="#" data-toggle="modal" data-target="#createAgreementModal">Book Now</a>
-<<<<<<< HEAD
                     <a class="btn btn-success" id="requestModalbtn" href="#" data-toggle="modal" data-target="#requestModal">Request for rent</a> 
                    
-=======
-                    <a class="btn btn-success" id="requestModalbtn" href="#" data-toggle="modal" data-target="#requestModal">Request for rent</a>  
->>>>>>> branch 'master' of https://github.com/Kshitiz-Shailendra/rentmate_POC.git
                 </div>
-            </div>
+                
+            	</div>
+            	
+            	<div class="row" style="margin-top: 32px;">
+	                 <div class="col-md-12" id="rqdisplayError">              
+				            <div class="row">				                
+				                <div class="col-md-12" id="rqmsgBox">
+				                    
+				                </div>
+				            </div>						            
+                      </div>
+	            </div>
                                     
           </div>          
         </div>
