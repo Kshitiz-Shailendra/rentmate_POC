@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMailHelper {
 
-	public static void sendMail(String receiverEmailId, StringBuilder body) {
+	public static void sendMail(String receiverEmailId, String subject, StringBuilder body) {
 		
 		final String username = AppConstants.MAILUSERNAME;
 		final String password = AppConstants.MAILPASSWORD;
@@ -33,7 +33,7 @@ public class SendMailHelper {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(username));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiverEmailId));
-			message.setSubject("Book request from a Tenant");
+			message.setSubject(subject);
 			message.setText(body.toString());
 			
 

@@ -1,6 +1,7 @@
 package com.sap.bkc.models;
 
 import org.web3j.abi.datatypes.Address;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class RentalAgreementModel {
 		
@@ -9,6 +10,8 @@ public class RentalAgreementModel {
 		private int createdTimestamp;
 		private Address tenant;
 		private Address landlord;
+		private String tenantEmail;
+		private TransactionReceipt receipt;
 		
 		public String getPropertyRegNo() {
 			return propertyRegNo;
@@ -40,12 +43,30 @@ public class RentalAgreementModel {
 		public void setLandlord(Address landlord) {
 			this.landlord = landlord;
 		}
+		public TransactionReceipt getReceipt() {
+			return receipt;
+		}
+		public void setReceipt(TransactionReceipt receipt) {
+			this.receipt = receipt;
+		}
+		public String getTenantEmail() {
+			return tenantEmail;
+		}
+		public void setTenantEmail(String tenantEmail) {
+			this.tenantEmail = tenantEmail;
+		}
+		
 		@Override
 		public String toString() {
 			return "RentalAgreementModel [propertyRegNo=" + propertyRegNo + ", rent=" + rent + ", createdTimestamp="
 					+ createdTimestamp + ", tenant=" + tenant + ", landlord=" + landlord + "]";
 		}
 		
-		
+		public String toString(TransactionReceipt receipt) {
+			return this.toString() + "\n\nTransaction Hash: " + receipt.getTransactionHash()
+			+ "\nTransaction Index: " + receipt.getTransactionIndex()
+			+ "\nBlock Number: " + receipt.getBlockNumber()
+			+ "\nContract Address: " + receipt.getContractAddress();
+		}
 		
 }

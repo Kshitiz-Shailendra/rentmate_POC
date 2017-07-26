@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 //import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Type;
@@ -25,6 +26,7 @@ import com.sap.bkc.models.PropertyModel;
 import com.sap.bkc.models.RentalAgreementModel;
 import com.sap.bkc.models.WalletModel;
 import com.sap.bkc.service.IPropertyRegistrationService;
+import com.sap.bkc.service.IRentAgreementService;
 import com.sap.bkc.utils.AppConstants;
 import com.sap.bkc.utils.AppConstants.Rented;
 import com.sap.bkc.utils.CredentialsHelper;
@@ -37,6 +39,8 @@ import com.sap.bkc.utils.Web3JObject;
 
 public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 
+	@Autowired IRentAgreementService rentAgreement;
+	
 	@Override
 	public TransactionReceipt insertRecord(PropertyModel propModel) {
 		return insertRecordUsingWrappers(propModel);
@@ -216,6 +220,19 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 														Utilities.getUTF8String(rentModel.getRent()),
 														(rentModel.getTenant())).get();
 			
+			RentalAgreementModel rentObj;
+			
+			if(receipt!=null) {
+				
+				rentObj = rentAgreement.getRentalAgreementDetails(rentModel.getTenant());
+				String receiverMail = rentModel.getTenantEmail();
+				String subject = "Property Confirmed by Owner";
+				String body = rentObj.toString(receipt);
+				
+				SendMailHelper.sendMail(receiverMail, subject, new StringBuilder(body));
+			}
+			
+			
 		} catch (InterruptedException | ExecutionException e) {
 		// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -227,6 +244,8 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 	
 	private void requestForRentWrappers(MailDetails model) {
 		
+		String subject = "Book request from a Tenant";
+		
 		StringBuilder body = new StringBuilder("Dear Owner,\nPlease approve my booking request\n");
 		body.append("\nProperty RegNo: "+model.getPropertyRegNo());
 		body.append("\nTenant Name: "+model.getUserName());
@@ -234,11 +253,9 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 		body.append("\nTenant Wallet Address: "+model.getUserWalletAddress());
 		body.append("\nTenant Mobile No: "+model.getUserMobileNo());
 		if(model.getUserMessage()!=null) body.append("\nTenant Message: "+model.getUserMessage());
+		body.append("\n\nThanks and Regards,\n" + model.getUserName());
 		
-		
-		SendMailHelper.sendMail(model.getOwnerEmail(), body);
-		//SendMailHelper.sendMail("saurav.patel@sap.com", body);
-		
+		SendMailHelper.sendMail(model.getOwnerEmail(), subject, body);
 		
 	}
 	
