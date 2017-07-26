@@ -58,15 +58,20 @@ public class RentalAgreementModel {
 		
 		@Override
 		public String toString() {
-			return "RentalAgreementModel [propertyRegNo=" + propertyRegNo + ", rent=" + rent + ", createdTimestamp="
-					+ createdTimestamp + ", tenant=" + tenant + ", landlord=" + landlord + "]";
+			return "RentalAgreementModel "
+					+ "/nProperty Registration No : " + propertyRegNo + ""
+					+ "/nRent : " + rent + ""
+					+"/nCreatedTimestamp : "+ createdTimestamp + ""
+					+ "/nTenant wallet address : " + tenant + ""
+					+ "/nlandlord wallet address : " + landlord + "/n";
 		}
 		
 		public String toString(TransactionReceipt receipt) {
-			return this.toString() + "\n\nTransaction Hash: " + receipt.getTransactionHash()
-			+ "\nTransaction Index: " + receipt.getTransactionIndex()
-			+ "\nBlock Number: " + receipt.getBlockNumber()
-			+ "\nContract Address: " + receipt.getContractAddress();
+			return this.toString() + 
+			"\n\nTransaction Hash : " + receipt.getTransactionHash()
+			+ "\nTransaction Index : " + receipt.getTransactionIndex()
+			+ "\nBlock Number : " + receipt.getBlockNumber()
+			+ "\nBlock Hash :" + receipt.getBlockHash();
 		}
 		
 }
