@@ -25,7 +25,7 @@ public interface AppConstants {
 	}
 	//contract addresses
 	//0xd046c5edafdd758f4834a2ba6f74a0ff232ba807
-	public static final String PROPERTYREGISTRY_CONTRACT_ADDRESS = "0x5c094d4931903565960f1fe4c8b9775c11f26dbb";
+	public static final String PROPERTYREGISTRY_CONTRACT_ADDRESS = "0x36dc7b5a7860c22cd3c212e6256b1335c6e5a184";
 	
 	public static final BigInteger GAS_PRICE = new BigInteger("18000000000");
 	public static final BigInteger GAS_LIMIT = new BigInteger("2900000"); 

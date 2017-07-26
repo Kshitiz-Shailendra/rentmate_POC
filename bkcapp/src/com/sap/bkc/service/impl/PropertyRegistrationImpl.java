@@ -226,10 +226,14 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 				
 				rentObj = rentAgreement.getRentalAgreementDetails(rentModel.getTenant());
 				String receiverMail = rentModel.getTenantEmail();
-				String subject = "Property Confirmed by Owner";
-				String body = rentObj.toString(receipt);
+				String subject = "Congrats! Your Request for the Property is confirmed by owner. ";
+				StringBuilder msgbody = new StringBuilder("Hi \n\n");
+				msgbody.append("Contract for your request has been created.Please find the details for the same below : \n\n");
+				msgbody.append(rentObj.toString(receipt)+"\n\n");
+				msgbody.append("Thanks for booking.");
+							
 				
-				SendMailHelper.sendMail(receiverMail, subject, new StringBuilder(body));
+				SendMailHelper.sendMail(receiverMail, subject, msgbody.toString());
 			}
 			
 			
@@ -255,7 +259,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 		if(model.getUserMessage()!=null) body.append("\nTenant Message: "+model.getUserMessage());
 		body.append("\n\nThanks and Regards,\n" + model.getUserName());
 		
-		SendMailHelper.sendMail(model.getOwnerEmail(), subject, body);
+		SendMailHelper.sendMail(model.getOwnerEmail(), subject, body.toString());
 		
 	}
 	
