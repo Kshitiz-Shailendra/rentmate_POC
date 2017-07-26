@@ -19,6 +19,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import com.sap.bkc.dao.contractWrappers.Property;
 import com.sap.bkc.dao.contractWrappers.PropertyRegistry;
 import com.sap.bkc.dao.contractWrappers.RentalAgreement;
+import com.sap.bkc.models.GeneralInfo;
 import com.sap.bkc.models.MailDetails;
 import com.sap.bkc.models.PropertyModel;
 import com.sap.bkc.models.RentalAgreementModel;
@@ -55,8 +56,8 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 
 	// possibility of using address as well will have to look into it
 	@Override
-	public List<PropertyModel> getOwnerProperties(String ownerName) {
-		return getOwnerPropertiesUsingWrappers(ownerName);
+	public List<PropertyModel> getOwnerProperties(String ownerName,AppConstants.Rented state) {
+		return getOwnerPropertiesUsingWrappers(ownerName,state);
 	}
 
 	@Override
@@ -74,7 +75,11 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 	public WalletModel getWalletInfo() throws InterruptedException, ExecutionException {
 		return getWalletInfoWrappers();
 	}
-
+	@Override
+	public GeneralInfo getDashboardRelatedInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private TransactionReceipt insertRecordUsingWrappers(PropertyModel propModel) {
 
@@ -135,10 +140,21 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 
 		return propertiesList;
 	}
+	
+	private List<PropertyModel> getOwnerPropertiesUsingWrappers(List<PropertyModel> properties,String ownerAddr) {
+		
+		List<PropertyModel> ownerProperties = properties
+				.parallelStream()
+				.filter(p -> p.getUserAddressAsString().equals(ownerAddr))
+				.collect(Collectors.toCollection(ArrayList::new));
 
-	private List<PropertyModel> getOwnerPropertiesUsingWrappers(String ownerName) {
+		return ownerProperties;		
+		
+	}
+	
+	private List<PropertyModel> getOwnerPropertiesUsingWrappers(String ownerName,AppConstants.Rented state) {
 
-		List<PropertyModel> ownerProperties = getPropertiesUsingWrappers(Rented.NOTRENTED)
+		List<PropertyModel> ownerProperties = getPropertiesUsingWrappers(state)
 					.parallelStream()
 					.filter(p -> p.getUsername().equals(ownerName))
 					.collect(Collectors.toCollection(ArrayList::new));
@@ -147,14 +163,14 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 
 	}
 
-	private List<PropertyModel> getOwnerPropertiesUsingAddress(String ownerAddr) {
+	private List<PropertyModel> getOwnerPropertiesUsingAddress(String ownerAddr,AppConstants.Rented state) {
 
-		List<PropertyModel> ownerProperties = getPropertiesUsingWrappers(Rented.NOTRENTED)
+		/*List<PropertyModel> ownerProperties = getPropertiesUsingWrappers(Rented.NOTRENTED)
 				.parallelStream()
 				.filter(p -> p.getUserAddressAsString().equals(ownerAddr))
-				.collect(Collectors.toCollection(ArrayList::new));
+				.collect(Collectors.toCollection(ArrayList::new));*/
 
-		return ownerProperties;
+		return getOwnerPropertiesUsingWrappers(getPropertiesUsingWrappers(state), ownerAddr);
 
 	}
 
@@ -226,24 +242,43 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 		
 	}
 	
-	private WalletModel getWalletInfoWrappers() throws InterruptedException, ExecutionException {
+	private WalletModel getWalletInfoWrappers() {
 		WalletModel walletObject = new WalletModel();
 		
-		walletObject.setWalletAddress(CredentialsHelper.getCurrentUserAddress());
 		
-		EthGetBalance ethGetBalance = Web3JObject.getInstance().ethGetBalance(walletObject.getWalletAddress(), DefaultBlockParameterName.LATEST)
-				  .sendAsync()
-				  .get();
+		try {
+			EthGetBalance ethGetBalance;
+			ethGetBalance = Web3JObject.getInstance().ethGetBalance(walletObject.getWalletAddress(), DefaultBlockParameterName.LATEST)
+					  .sendAsync()
+					  .get();
 		
-		BigInteger wei = ethGetBalance.getBalance();
 		
-		String balance = wei.divide(new BigInteger("1000000000000000000")).toString();
-		
-		walletObject.setWalletBalance(balance);
-		
+			BigInteger wei = ethGetBalance.getBalance();
+			
+			String balance = wei.divide(new BigInteger("1000000000000000000")).toString();
+			
+			walletObject.setWalletAddress(CredentialsHelper.getCurrentUserAddress());
+			walletObject.setWalletBalance(balance);
+		} catch (InterruptedException | ExecutionException e) {
+			
+			e.printStackTrace();
+		}
 		return walletObject;
 	}
-
+	
+	public GeneralInfo getDashboardRelatedInfoUsingWrappers() {
+		
+		GeneralInfo dashboardInfo = new GeneralInfo();
+		String userAddress = CredentialsHelper.getCurrentUserAddress();
+		List<PropertyModel> propertiesAll = getProperties(Rented.ALL);
+		List<PropertyModel> ownerProperties = getOwnerPropertiesUsingWrappers(propertiesAll, userAddress);
+		WalletModel wallet = getWalletInfoWrappers();
+		
+		dashboardInfo.setTotalProperties(propertiesAll.size());
+		dashboardInfo.setPostedProperties(ownerProperties.size());
+		dashboardInfo.setWallet(wallet);
+		return null;
+	}
 	
 	
 

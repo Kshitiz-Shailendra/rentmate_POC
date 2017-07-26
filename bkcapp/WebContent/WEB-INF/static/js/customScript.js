@@ -128,8 +128,8 @@ $('#rLogin').click(function(){
     var userIdNo;
     for(var i in tbClients){
         var cli = JSON.parse(tbClients[i]);
-        console.log(cli.Email);
-        if (lEmail === cli.Email && lPass === cli.Password) {
+        console.log(cli.Name);
+        if (lName === cli.Name && lPass === cli.Password) {
             //alert("Enter");
             count = count +1;
             userIdNo = cli.userIdNo;
@@ -144,7 +144,7 @@ $('#rLogin').click(function(){
         setCookie("vars",userIdNo,"1");
         
         $.ajax({
-            url: 'http://localhost:8082/bkcapp/property/Login/saurav/SauravOne/',  //change this with Post property URL and change GET method to POST with data
+            url: 'http://localhost:8082/bkcapp/property/Login/'+lName+'/'+lPass+'/',  //change this with Post property URL and change GET method to POST with data
             type: 'GET',
             //type: 'POST',
             //data: postJson,
