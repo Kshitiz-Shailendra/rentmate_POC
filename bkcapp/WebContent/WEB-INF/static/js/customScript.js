@@ -275,7 +275,7 @@ $(function() {
 								.val(), propaddress = $('#propaddress').val(), propcity = $(
 								'#propcity').val(), propstate = $('#propstate')
 								.val(), propCompleteAddress = propaddress
-								+ ", " + propcity + ", " + propstate;
+								+ "+ " + propcity + "+ " + propstate;
 						proprent = $('#proprent').val(), propdeposit = $(
 								'#propdeposit').val(), propdetails = $(
 								'#propdetails').val(), console.log(propdeposit)

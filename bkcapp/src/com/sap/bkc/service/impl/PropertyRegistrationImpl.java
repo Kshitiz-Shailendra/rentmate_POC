@@ -101,9 +101,11 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 			receipt = propertyRegsitry.insertRecord(Utilities.getUTF8String(propModel.getRent()),
 					Utilities.getUTF8String(propModel.getUserEmail()),
 					Utilities.getUTF8String(propModel.getPropertyRegNo()),
-					Utilities.getUTF8String(propModel.getAddress()), Utilities.getUTF8String(propModel.getUsername()),
+					Utilities.getUTF8String(propModel.getAddress()), 
+					Utilities.getUTF8String(propModel.getUsername()),
 					Utilities.getUTF8String(propModel.getHouseSize()),
 					Utilities.getUTF8String(propModel.getAboutProperty())).get();
+			
 			propertyRegsitry.insertRecordDetailsArray(Utilities.getUTF8String(propModel.getPropertyRegNo()),
 					Utilities.getUTF8String(record));
 		} catch (InterruptedException | ExecutionException e) {
@@ -122,7 +124,7 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 		try {
 			String[] allProps = propertyRegsitry.getHouses(Utilities.getUint8(state.getState())).get().toString()
 					.split(";");
-			
+
 			for (String str : allProps) {
 				if (!str.equals("")) {
 					String[] strArr = str.split(",");
@@ -189,12 +191,12 @@ public class PropertyRegistrationImpl implements IPropertyRegistrationService {
 			List<Type> details = prop.getPropertydetails().get();
 			
 			Address userAddress = (Address)details.get(1);
-			System.out.println(details.get(0).toString());
+			
 			String[] detailArr = (details.get(0).toString()).split(",");
 			model.setRent(Integer.parseInt(detailArr[0]));
 			model.setUserEmail(detailArr[1]);
 			model.setPropertyRegNo(detailArr[2]);
-			model.setAddress(detailArr[3]);
+			model.setAddress(detailArr[3].replace("+", ","));
 			model.setUsername(detailArr[4]);
 			model.setHouseSize(detailArr[5]);
 			model.setAboutProperty(detailArr[6]);
